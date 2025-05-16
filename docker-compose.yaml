@@ -1,0 +1,28 @@
+services:
+  postgres:
+    image: postgres:16.4-alpine3.20
+    container_name: mypostgres
+    environment:
+      POSTGRES_DB: hw02
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 567234
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    networks:
+      - my-app-network
+  app:
+    build: .
+    container_name: my_app
+    ports:
+      - '5000:5000'
+    depends_on:
+      - postgres
+    networks:
+      - my-app-network
+    environment:
+      DATABASE_URL: postgresql://postgres:567234@postgres:5432/hw02
+
+networks:
+  my-app-network:
